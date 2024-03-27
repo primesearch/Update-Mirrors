@@ -1,0 +1,275 @@
+name: Update Mirrors
+
+on:
+  schedule:
+    - cron:  '0 12 * * *'
+  workflow_dispatch:
+
+jobs:
+  Prime95:
+    name: Update Prime95 mirror
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: primesearch/Prime95
+        fetch-depth: 0
+        token: ${{ secrets.TOKEN }}
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/prime95_tmp/*.zip
+        key: Prime95-${{ hashFiles('~/prime95_tmp/*.zip') }}
+        restore-keys: |
+          Prime95
+    - name: Free disk space
+      run: |
+        df -kh .
+        sudo apt-get -y clean
+        sudo rm -rf /usr/local/lib/android
+        df -kh .
+    - name: Before script
+      run: |
+        cd ~/
+        mkdir -p prime95_tmp
+        cd prime95_tmp
+        wget -nv -r -np -nd -A '*source*.zip' -nc --content-disposition --compression auto https://www.mersenne.org/download/software/ || echo "Error: $?"
+        for file in *.zip; do
+            unzip -q -d "${file%.zip}" "$file" || echo "Error: $?"
+        done
+    - name: Script
+      run: |
+        git config --global user.email 'woltman@alum.mit.edu'
+        git config --global user.name 'George Woltman'
+        git checkout --orphan temp
+        while read -r -d '' file; do
+            dir=$(basename "$file" .zip)
+            date=$(stat -c %y "$file")
+            rm -rf -- *
+            cp -r "${file%.zip}"/* .
+            git add .
+            GIT_COMMITTER_DATE=$date git commit -m "Added files for ${dir%.source}." --date "$date"
+        done < <(find ~/prime95_tmp -mindepth 1 -maxdepth 1 -type f -name '*.zip' -printf '%T@\t%p\0' | sort -zn | cut -z -f 2-)
+        if [[ $(git rev-list --count HEAD) -gt $(git rev-list --count main) ]]; then
+            git gc
+            git push origin HEAD:main -f
+        fi
+
+  CUDALucas:
+    name: Update CUDALucas mirror
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: primesearch/CUDALucas
+        token: ${{ secrets.TOKEN }}
+    - name: Install
+      run: |
+        sudo add-apt-repository ppa:git-core/ppa
+        sudo apt-get update
+        sudo apt-get install -y git-svn
+    - name: Script
+      run: |
+        git svn init -s https://svn.code.sf.net/p/cudalucas/code
+        git svn fetch
+        git update-ref refs/remotes/git-svn refs/remotes/origin/master
+        git svn rebase
+        git push --mirror origin
+
+  CUDAPm1:
+    name: Update CUDAPm1 mirror
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: primesearch/CUDAPm1
+        token: ${{ secrets.TOKEN }}
+    - name: Install
+      run: |
+        sudo add-apt-repository ppa:git-core/ppa
+        sudo apt-get update
+        sudo apt-get install -y git-svn
+    - name: Script
+      run: |
+        git svn init -s https://svn.code.sf.net/p/cudapm1/code
+        git svn fetch
+        git update-ref refs/remotes/git-svn refs/remotes/origin/master
+        git svn rebase
+        git push --mirror origin
+
+  mtsieve:
+    name: Update mtsieve mirror
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: primesearch/mtsieve
+        token: ${{ secrets.TOKEN }}
+    - name: Install
+      run: |
+        sudo add-apt-repository ppa:git-core/ppa
+        sudo apt-get update
+        sudo apt-get install -y git-svn
+    - name: Script
+      run: |
+        git svn init https://svn.code.sf.net/p/mtsieve/svn/
+        git svn fetch
+        git update-ref refs/remotes/git-svn refs/remotes/origin/master
+        git svn rebase
+        git push --mirror origin
+
+  ECMNet:
+    name: Update ECMNet mirror
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: primesearch/ECMNet
+        token: ${{ secrets.TOKEN }}
+    - name: Install
+      run: |
+        sudo add-apt-repository ppa:git-core/ppa
+        sudo apt-get update
+        sudo apt-get install -y git-svn
+    - name: Script
+      run: |
+        git svn init https://svn.code.sf.net/p/ecmnet/code/
+        git svn fetch
+        git update-ref refs/remotes/git-svn refs/remotes/origin/master
+        git svn rebase
+        git push --mirror origin
+
+  PRPNet:
+    name: Update PRPNet mirror
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: primesearch/PRPNet
+        token: ${{ secrets.TOKEN }}
+    - name: Install
+      run: |
+        sudo add-apt-repository ppa:git-core/ppa
+        sudo apt-get update
+        sudo apt-get install -y git-svn
+    - name: Script
+      run: |
+        git svn init https://svn.code.sf.net/p/prpnet/code/
+        git svn fetch
+        git update-ref refs/remotes/git-svn refs/remotes/origin/master
+        git svn rebase
+        git push --mirror origin
+
+  OpenPFGW:
+    name: Update OpenPFGW mirror
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: primesearch/OpenPFGW
+        token: ${{ secrets.TOKEN }}
+    - name: Install
+      run: |
+        sudo add-apt-repository ppa:git-core/ppa
+        sudo apt-get update
+        sudo apt-get install -y git-svn
+    - name: Script
+      run: |
+        git svn init https://svn.code.sf.net/p/openpfgw/code/
+        git svn fetch
+        git update-ref refs/remotes/git-svn refs/remotes/origin/master
+        git svn rebase
+        git push --mirror origin
+
+  LLR:
+    name: Update LLR mirrors
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: primesearch/LLR
+        path: LLR
+        fetch-depth: 0
+        token: ${{ secrets.TOKEN }}
+    - uses: actions/checkout@v4
+      with:
+        repository: primesearch/llrCUDA
+        path: llrCUDA
+        fetch-depth: 0
+        token: ${{ secrets.TOKEN }}
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/llr_tmp/*.rar
+          ~/llr_tmp/*.zip
+        key: LLR-${{ hashFiles('~/llr_tmp/*.rar', '~/llr_tmp/*.zip') }}
+        restore-keys: |
+          LLR
+    - name: Free disk space
+      run: |
+        df -kh .
+        sudo apt-get -y clean
+        sudo rm -rf /usr/local/lib/android
+        df -kh .
+    - name: Install
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y unrar
+    - name: Before script
+      run: |
+        cd ~/
+        mkdir -p llr_tmp
+        cd llr_tmp
+        wget -nv -r -np -nd -A '*src.rar,*src.zip' -nc --content-disposition --compression auto http://jpenne.free.fr/index2.html
+        for file in *.zip; do
+            unzip -q "$file"
+        done
+        for file in *.rar; do
+            unrar x -idq "$file"
+        done
+        mv llr384devsrc llr384src
+        mv llr38nrsc llr38nsrc
+        mv llr37src llr37bsrc
+    - name: Script LLR
+      run: |
+        git config --global user.email 'jpenne@free.fr'
+        git config --global user.name 'Jean Penné'
+        cd LLR
+        git checkout --orphan temp
+        while read -r -d '' file; do
+            dir=$(basename "$file")
+            date=$(stat -c %y "$file")
+            rm -rf -- *
+            cp -r "${file%.*}"/* .
+            git add .
+            GIT_COMMITTER_DATE=$date git commit -m "Added files for ${dir%src.*}." --date "$date"
+        done < <(find ~/llr_tmp -mindepth 1 -maxdepth 1 -type f -name 'llr[0-9]*src.*' -printf '%T@\t%p\0' | sort -zn | cut -z -f 2-)
+        if [[ $(git rev-list --count HEAD) -gt $(git rev-list --count main) ]]; then
+            git gc
+            git push origin HEAD:main -f
+        fi
+    - name: Script llrCUDA
+      run: |
+        cd llrCUDA
+        git checkout --orphan temp
+        while read -r -d '' file; do
+            dir=$(basename "$file")
+            date=$(stat -c %y "$file")
+            rm -rf -- *
+            cp -r "${file%.*}"/* .
+            (shopt -s globstar; rm -rf -- **/lib*.a)
+            git add .
+            GIT_COMMITTER_DATE=$date git commit -m "Added files for ${dir%src.*}." --date "$date"
+        done < <(find ~/llr_tmp -mindepth 1 -maxdepth 1 -type f -name 'llrcuda[0-9]*src.*' -printf '%T@\t%p\0' | sort -zn | cut -z -f 2-)
+        if [[ $(git rev-list --count HEAD) -gt $(git rev-list --count main) ]]; then
+            git gc
+            git push origin HEAD:main -f
+        fi
