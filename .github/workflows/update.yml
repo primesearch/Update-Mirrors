@@ -16,17 +16,17 @@ jobs:
         repository: primesearch/Prime95
         fetch-depth: 0
         token: ${{ secrets.TOKEN }}
-    - uses: actions/cache@v4
+    - uses: actions/cache/restore@v4
       with:
         path: |
           ~/prime95_tmp/*.zip
-        key: Prime95-${{ hashFiles('~/prime95_tmp/*.zip') }}
+        key: Prime95-
         restore-keys: |
-          Prime95
+          Prime95-
     - name: Free disk space
       run: |
         df -kh .
-        sudo apt-get -y clean
+        sudo apt-get clean -y
         sudo rm -rf /usr/local/lib/android
         df -kh .
     - name: Before script
@@ -55,6 +55,11 @@ jobs:
             git gc
             git push origin HEAD:main -f
         fi
+    - uses: actions/cache/save@v4
+      with:
+        path: |
+          ~/prime95_tmp/*.zip
+        key: Prime95-${{ hashFiles('~/prime95_tmp/*.zip') }}
 
   CUDALucas:
     name: Update CUDALucas mirror
@@ -205,18 +210,18 @@ jobs:
         path: llrCUDA
         fetch-depth: 0
         token: ${{ secrets.TOKEN }}
-    - uses: actions/cache@v4
+    - uses: actions/cache/restore@v4
       with:
         path: |
           ~/llr_tmp/*.rar
           ~/llr_tmp/*.zip
-        key: LLR-${{ hashFiles('~/llr_tmp/*.rar', '~/llr_tmp/*.zip') }}
+        key: LLR-
         restore-keys: |
-          LLR
+          LLR-
     - name: Free disk space
       run: |
         df -kh .
-        sudo apt-get -y clean
+        sudo apt-get clean -y
         sudo rm -rf /usr/local/lib/android
         df -kh .
     - name: Install
@@ -273,3 +278,9 @@ jobs:
             git gc
             git push origin HEAD:main -f
         fi
+    - uses: actions/cache/save@v4
+      with:
+        path: |
+          ~/llr_tmp/*.rar
+          ~/llr_tmp/*.zip
+        key: LLR-${{ hashFiles('~/llr_tmp/*.rar', '~/llr_tmp/*.zip') }}
