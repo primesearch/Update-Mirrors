@@ -79,9 +79,10 @@ jobs:
       run: |
         git svn init -s https://svn.code.sf.net/p/cudalucas/code
         git svn fetch
-        git update-ref refs/remotes/git-svn refs/remotes/origin/master
         git svn rebase
-        git push --mirror origin
+        if [[ $(git rev-list --count HEAD) -gt $(git rev-list --count origin/master) ]]; then
+            git push --mirror origin
+        fi
 
   CUDAPm1:
     name: Update CUDAPm1 mirror
@@ -101,9 +102,10 @@ jobs:
       run: |
         git svn init -s https://svn.code.sf.net/p/cudapm1/code
         git svn fetch
-        git update-ref refs/remotes/git-svn refs/remotes/origin/master
         git svn rebase
-        git push --mirror origin
+        if [[ $(git rev-list --count HEAD) -gt $(git rev-list --count origin/master) ]]; then
+            git push --mirror origin
+        fi
 
   mtsieve:
     name: Update mtsieve mirror
@@ -123,9 +125,10 @@ jobs:
       run: |
         git svn init https://svn.code.sf.net/p/mtsieve/svn/
         git svn fetch
-        git update-ref refs/remotes/git-svn refs/remotes/origin/master
         git svn rebase
-        git push --mirror origin
+        if [[ $(git rev-list --count HEAD) -gt $(git rev-list --count origin/master) ]]; then
+            git push --mirror origin
+        fi
 
   ECMNet:
     name: Update ECMNet mirror
@@ -145,9 +148,10 @@ jobs:
       run: |
         git svn init https://svn.code.sf.net/p/ecmnet/code/
         git svn fetch
-        git update-ref refs/remotes/git-svn refs/remotes/origin/master
         git svn rebase
-        git push --mirror origin
+        if [[ $(git rev-list --count HEAD) -gt $(git rev-list --count origin/master) ]]; then
+            git push --mirror origin
+        fi
 
   PRPNet:
     name: Update PRPNet mirror
@@ -167,9 +171,10 @@ jobs:
       run: |
         git svn init https://svn.code.sf.net/p/prpnet/code/
         git svn fetch
-        git update-ref refs/remotes/git-svn refs/remotes/origin/master
         git svn rebase
-        git push --mirror origin
+        if [[ $(git rev-list --count HEAD) -gt $(git rev-list --count origin/master) ]]; then
+            git push --mirror origin
+        fi
 
   OpenPFGW:
     name: Update OpenPFGW mirror
@@ -189,9 +194,10 @@ jobs:
       run: |
         git svn init https://svn.code.sf.net/p/openpfgw/code/
         git svn fetch
-        git update-ref refs/remotes/git-svn refs/remotes/origin/master
         git svn rebase
-        git push --mirror origin
+        if [[ $(git rev-list --count HEAD) -gt $(git rev-list --count origin/master) ]]; then
+            git push --mirror origin
+        fi
 
   LLR:
     name: Update LLR mirrors
