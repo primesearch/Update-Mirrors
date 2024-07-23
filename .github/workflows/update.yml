@@ -239,7 +239,7 @@ jobs:
         cd ~/
         mkdir -p llr_tmp
         cd llr_tmp
-        wget -nv -r -np -nd -A '*src.rar,*src.zip' -nc --content-disposition --compression auto http://jpenne.free.fr/index2.html
+        wget -nv -r -np -nd -A '*src.rar,*src.zip' -R '*_32src.zip' -nc --content-disposition --compression auto http://jpenne.free.fr/index2.html
         for file in *.zip; do
             unzip -q "$file"
         done
