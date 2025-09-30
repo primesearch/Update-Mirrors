@@ -241,14 +241,15 @@ jobs:
         cd llr_tmp
         wget -nv -r -np -nd -A '*src.rar,*src.zip' -R '*_32src.zip' -nc --content-disposition --compression auto http://jpenne.free.fr/index2.html
         for file in *.zip; do
-            unzip -q "$file"
+            mkdir -- "${file%.*}"
+            unzip -q -d "${file%.*}" "$file"
+            mv -- "${file%.*}"{/*/*,/}
         done
         for file in *.rar; do
-            unrar x -idq "$file"
+            mkdir -- "${file%.*}"
+            unrar x -idq "$file" "${file%.*}"/
+            mv -- "${file%.*}"{/*/*,/}
         done
-        mv llr384devsrc llr384src
-        mv llr38nrsc llr38nsrc
-        mv llr37src llr37bsrc
     - name: Script LLR
       run: |
         git config --global user.email 'jpenne@free.fr'
