@@ -11,7 +11,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: primesearch/Prime95
         fetch-depth: 0
@@ -66,7 +66,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: primesearch/CUDALucas
         token: ${{ secrets.TOKEN }}
@@ -89,7 +89,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: primesearch/CUDAPm1
         token: ${{ secrets.TOKEN }}
@@ -112,7 +112,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: primesearch/mtsieve
         token: ${{ secrets.TOKEN }}
@@ -135,7 +135,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: primesearch/ECMNet
         token: ${{ secrets.TOKEN }}
@@ -158,7 +158,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: primesearch/PRPNet
         token: ${{ secrets.TOKEN }}
@@ -181,7 +181,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: primesearch/OpenPFGW
         token: ${{ secrets.TOKEN }}
@@ -204,13 +204,13 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: primesearch/LLR
         path: LLR
         fetch-depth: 0
         token: ${{ secrets.TOKEN }}
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         repository: primesearch/llrCUDA
         path: llrCUDA
