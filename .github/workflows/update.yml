@@ -16,7 +16,7 @@ jobs:
         repository: primesearch/Prime95
         fetch-depth: 0
         token: ${{ secrets.TOKEN }}
-    - uses: actions/cache/restore@v5
+    - uses: actions/cache/restore@v6
       with:
         path: |
           ~/prime95_tmp/*.zip
@@ -55,7 +55,7 @@ jobs:
             git gc
             git push origin HEAD:main -f
         fi
-    - uses: actions/cache/save@v5
+    - uses: actions/cache/save@v6
       with:
         path: |
           ~/prime95_tmp/*.zip
@@ -216,7 +216,7 @@ jobs:
         path: llrCUDA
         fetch-depth: 0
         token: ${{ secrets.TOKEN }}
-    - uses: actions/cache/restore@v5
+    - uses: actions/cache/restore@v6
       with:
         path: |
           ~/llr_tmp/*.rar
@@ -285,7 +285,7 @@ jobs:
             git gc
             git push origin HEAD:main -f
         fi
-    - uses: actions/cache/save@v5
+    - uses: actions/cache/save@v6
       with:
         path: |
           ~/llr_tmp/*.rar
